@@ -2,6 +2,7 @@ package sg.edu.np.week_6_whackamole_3_0;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,6 +27,11 @@ public class MainActivity extends AppCompatActivity {
     private static final String FILENAME = "MainActivity.java";
     private static final String TAG = "Whack-A-Mole3.0!";
 
+    EditText mEtUsername, mEtPassword;
+    Button mBtnLogin;
+    TextView mTxtCreate;
+
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +46,54 @@ public class MainActivity extends AppCompatActivity {
             Log.v(TAG, FILENAME + ": Invalid user!");
 
         */
+
+        mEtUsername = findViewById(R.id.edUsername);
+        mEtPassword = findViewById(R.id.edPassword);
+        mBtnLogin = findViewById(R.id.btnLogin);
+        mTxtCreate = findViewById(R.id.txtNewAccount);
+
+        mBtnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Log.v(TAG, FILENAME + ": Logging in with: " + mEtUsername.getText().toString() + ": " + mEtPassword.getText().toString());
+
+                String username = mEtUsername.getText().toString();
+                String password = mEtPassword.getText().toString();
+
+                if(isValidUser(username, password)){
+                    Log.v(TAG, FILENAME + ": Valid User! Logging in");
+
+                    MyDBHandler myDBHandler = new MyDBHandler(MainActivity.this);
+                    UserData userData = myDBHandler.findUser(username);
+
+                    moveToLevels(userData);
+                }else{
+                    Log.v(TAG, FILENAME + ": Invalid user!");
+
+                    Toast.makeText(MainActivity.this, "Invalid Username and Password", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+
+        mTxtCreate.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                Log.v(TAG, FILENAME + ": Create new user!");
+
+                moveToCreate();
+
+                return false;
+            }
+        });
+
+
+
+
+
 
 
     }
@@ -55,6 +111,32 @@ public class MainActivity extends AppCompatActivity {
             You may choose to use this or modify to suit your design.
          */
 
+
+        MyDBHandler myDBHandler = new MyDBHandler(this);
+        UserData userData = myDBHandler.findUser(userName);
+
+        //TODO: QUESTION
+//        Log.v(TAG, FILENAME + ": Running Checks..." + dbData.getMyUserName() + ": " + dbData.getMyPassword() +" <--> "+ userName + " " + password);
+
+        return userData != null;
+
+    }
+
+    private void moveToCreate(){
+
+        Intent intent = new Intent(MainActivity.this, Main2Activity.class);
+        startActivity(intent);
+
+    }
+
+    private void moveToLevels(UserData userData){
+
+
+        Intent intent = new Intent(MainActivity.this, Main3Activity.class);
+
+
+        intent.putExtra("myUser", userData);
+        startActivity(intent);
     }
 
 }

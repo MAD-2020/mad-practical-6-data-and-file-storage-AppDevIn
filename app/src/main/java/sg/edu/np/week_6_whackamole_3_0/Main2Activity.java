@@ -7,9 +7,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Main2Activity extends AppCompatActivity {
     /* Hint:
@@ -27,6 +32,9 @@ public class Main2Activity extends AppCompatActivity {
     private static final String FILENAME = "Main2Activity.java";
     private static final String TAG = "Whack-A-Mole3.0!";
 
+    EditText mEtUsername, mEtPassword;
+    Button mBtnCreate, mBtnCancel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,10 +51,85 @@ public class Main2Activity extends AppCompatActivity {
             Log.v(TAG, FILENAME + ": User already exist during new user creation!");
 
          */
+
+        mEtUsername = findViewById(R.id.edUsername);
+        mEtPassword = findViewById(R.id.edPassword);
+        mBtnCreate = findViewById(R.id.btnCreate);
+        mBtnCancel = findViewById(R.id.btnCancel);
+        
+        
+        mBtnCreate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                
+                String username = mEtUsername.getText().toString();
+                String password = mEtPassword.getText().toString();
+                
+                
+                if(!hasValidUser(username)){
+
+                    UserData userData = new UserData(
+                            username,
+                            password,
+                            new ArrayList<Integer>( Arrays.asList(1,2,3,4,5,6,7,8,9,10)),
+                            new ArrayList<Integer>( Arrays.asList(0,0,0,0,0,0,0,0,0,0))
+                            );
+                    
+                    userData.setMyUserName(username);
+                    userData.setMyPassword(password);
+                    
+                    MyDBHandler myDBHandler = new MyDBHandler(Main2Activity.this);
+                    myDBHandler.addUser(userData);
+
+                    Toast.makeText(Main2Activity.this, "User Created Successfully", Toast.LENGTH_SHORT).show();
+                    Log.v(TAG, FILENAME + ": New user created successfully!");
+
+                    moveToLogin();
+                }else{
+
+                    Toast.makeText(Main2Activity.this, "User Already Exist. Please Try Again", Toast.LENGTH_SHORT).show();
+                    Log.v(TAG, FILENAME + ": User already exist during new user creation!");
+                }
+            }
+        });
+        
+        
+        mBtnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                moveToLogin();
+            }
+        });
+        
+        
     }
 
     protected void onStop() {
         super.onStop();
         finish();
+    }
+
+
+    public boolean hasValidUser(String userName){
+
+        /* HINT:
+            This method is called to access the database and return a true if user is valid and false if not.
+            Log.v(TAG, FILENAME + ": Running Checks..." + dbData.getMyUserName() + ": " + dbData.getMyPassword() +" <--> "+ userName + " " + password);
+            You may choose to use this or modify to suit your design.
+         */
+
+
+        MyDBHandler myDBHandler = new MyDBHandler(this);
+        UserData userData = myDBHandler.findUser(userName);
+
+        return userData != null;
+
+    }
+
+    private void moveToLogin(){
+
+        Intent intent = new Intent(Main2Activity.this, MainActivity.class);
+        startActivity(intent);
+
     }
 }
