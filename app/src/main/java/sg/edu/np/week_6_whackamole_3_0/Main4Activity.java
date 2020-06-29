@@ -93,14 +93,13 @@ public class Main4Activity extends AppCompatActivity {
             @Override
             public void onTick(long millisUntilFinished) {
 
-                Toast.makeText(getApplicationContext(), String.valueOf(millisUntilFinished / 1000), Toast.LENGTH_SHORT).show();
+
 
             }
 
             @Override
             public void onFinish() {
                 Log.v(TAG, "Ready CountDown Complete!");
-                Toast.makeText(getApplicationContext(), "GO!", Toast.LENGTH_SHORT).show();
 
 
                 newMolePlaceTimer.start();
