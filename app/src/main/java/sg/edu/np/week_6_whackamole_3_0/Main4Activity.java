@@ -63,7 +63,7 @@ public class Main4Activity extends AppCompatActivity {
             @Override
             public void onTick(long millisUntilFinished) {
                 Log.v(TAG, "Ready CountDown!" + millisUntilFinished/ 1000);
-                Toast.makeText(getApplicationContext(), String.valueOf(millisUntilFinished / 1000), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"Get Ready in " + String.valueOf(millisUntilFinished / 1000) + " seconds!", Toast.LENGTH_SHORT).show();
 
             }
 
@@ -72,6 +72,7 @@ public class Main4Activity extends AppCompatActivity {
                 Log.v(TAG, "Ready CountDown Complete!");
                 Toast.makeText(getApplicationContext(), "GO!", Toast.LENGTH_SHORT).show();
 
+                setNewMole();
                 placeMoleTimer();
                 isGamingRunning = true;
             }
@@ -99,7 +100,6 @@ public class Main4Activity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                Log.v(TAG, "Ready CountDown Complete!");
 
 
                 newMolePlaceTimer.start();
@@ -236,7 +236,7 @@ public class Main4Activity extends AppCompatActivity {
             Sets the new location of the mole. Adds additional mole if the level difficulty is from 6 to 10.
          */
 
-        Log.d(TAG, "New mole added");
+        Log.d(TAG, "New Mole Location");
         Random ran = new Random();
         int randomLocation = ran.nextInt(9);
 
