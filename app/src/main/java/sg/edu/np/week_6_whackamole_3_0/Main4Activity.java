@@ -189,7 +189,7 @@ public class Main4Activity extends AppCompatActivity {
     @Override
     protected void onStart(){
         super.onStart();
-        readyTimer();
+
     }
 
     @Override
