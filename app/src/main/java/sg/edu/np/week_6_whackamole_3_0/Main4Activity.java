@@ -42,7 +42,7 @@ public class Main4Activity extends AppCompatActivity {
     int advancedScore;
     Button btnMole, btnNewMole, btnBack;
     TextView txt_score;
-    boolean isGamingRunning;
+    boolean isGamingRunning = false;
     int mLevel;
 
     UserData mUserData;
@@ -175,8 +175,6 @@ public class Main4Activity extends AppCompatActivity {
                 public void onClick(View view) {
                     if(isGamingRunning){
                         doCheck(button);
-                    }else {
-                        Toast.makeText(getApplicationContext(), "Please wait till countdown ends", Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -196,12 +194,12 @@ public class Main4Activity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         updateUserScore();
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        updateUserScore();
 
     }
 
@@ -284,15 +282,16 @@ public class Main4Activity extends AppCompatActivity {
 
         Log.v(TAG, FILENAME + ": Update User Score...");
 
+        if(mUserData.getScores().get(mLevel-1) < advancedScore) {
+            MyDBHandler myDBHandler = new MyDBHandler(this);
+            myDBHandler.deleteAccount(mUserData.getMyUserName());
 
-        MyDBHandler myDBHandler = new MyDBHandler(this);
-        myDBHandler.deleteAccount(mUserData.getMyUserName());
-
-        mUserData.getScores().set(mLevel-1, advancedScore);
-        Log.d(TAG, "updateUserScore: " + mUserData.getScores());
+            mUserData.getScores().set(mLevel - 1, advancedScore);
+            Log.d(TAG, "updateUserScore: " + mUserData.getScores());
 
 
-        myDBHandler.addUser(mUserData);
+            myDBHandler.addUser(mUserData);
+        }
 
         newMolePlaceTimer.cancel();
         readyTimer.cancel();
